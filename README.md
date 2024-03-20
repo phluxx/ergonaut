@@ -1,16 +1,9 @@
 # phlirc
 
-A new Flutter project.
+An IRCv3 IRC Client written specifically to support the features of the [Ergo IRCd](https://github.com/ergochat/ergo).
 
-## Getting Started
+This IRC Client will not be intended to support IRC Networks which are not using Ergo IRCd. As such, use on networks such as Libera Chat will not be officially supported.
 
-This project is a starting point for a Flutter application.
+This will be the foundation for the future [Verbabble](https://www.verbabble.com/) Client.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This will utilize the Flutter framework.
