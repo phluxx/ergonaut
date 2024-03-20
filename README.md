@@ -1,4 +1,4 @@
-# phlirc
+# Ergonaut
 
 An IRCv3 IRC Client written specifically to support the features of the [Ergo IRCd](https://github.com/ergochat/ergo).
 
