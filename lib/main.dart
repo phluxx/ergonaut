@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // for checking saved networks
-import 'package:flutter/foundation.dart'; // for kIsWeb
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'themes.dart';
+import 'theme_provider.dart';
 
 void main() async {
   // Check if there are any saved networks
   final hasNetworks = await _hasSavedNetworks();
 
-  runApp(Ergonaut(hasNetworks: hasNetworks));
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(
+        darkTheme: darkErgonaut,
+        lightTheme: lightErgonaut,
+      ),
+      child: Ergonaut(hasNetworks: hasNetworks),
+    ),
+  );
 }
 
 Future<bool> _hasSavedNetworks() async {
@@ -15,61 +24,78 @@ Future<bool> _hasSavedNetworks() async {
   // For now, assume no networks are saved
   return false;
 }
-
+enum ThemeOption {
+  light,
+  dark,
+}
 class Ergonaut extends StatelessWidget {
   final bool hasNetworks;
 
   Ergonaut({Key? key, required this.hasNetworks}) : super(key: key);
 
-  // Define default and dark themes
-  final ThemeData _darkTheme = ThemeData.dark();
-  final ThemeData _lightTheme = ThemeData.light();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ergonaut',
-      theme: _getTheme(context),
+      theme: Provider.of<ThemeProvider>(context).getTheme(),
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: MediaQuery.of(context).size.height * 0.7 / ( 1024 / 1080),
-                child: SvgPicture.asset(
-                  'assets/logo.svg',
-                  semanticsLabel: 'Ergonaut logo',
-                )
-              ),
-              SizedBox(height: 20),
-              hasNetworks
-                  ? Text('Your IRC Networks') // Replace with actual UI for networks
-                  : ElevatedButton(
-                      onPressed: () {
-                        // Handle "Add Network" button press
+        body: Padding(
+          padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    PopupMenuButton<ThemeOption>(
+                      onSelected: (ThemeOption value) {
+                        if (value == ThemeOption.light) {
+                          Provider.of<ThemeProvider>(context, listen: false).setLightTheme();
+                        } else if (value == ThemeOption.dark) {
+                          Provider.of<ThemeProvider>(context, listen: false).setDarkTheme();
+                        }
                       },
-                      child: const Text('Add Network'),
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<ThemeOption>>[
+                        const PopupMenuItem<ThemeOption>(
+                          value: ThemeOption.light,
+                          child: Text('Light Theme'),
+                        ),
+                        const PopupMenuItem<ThemeOption>(
+                          value: ThemeOption.dark,
+                          child: Text('Dark Theme'),
+                        ),
+                      ],
                     ),
-            ],
-          ),
-        ),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: MediaQuery.of(context).size.height * 0.7 / ( 1024 / 1080),
+                        child: SvgPicture.asset(
+                          'assets/logo.svg',
+                          semanticsLabel: 'Ergonaut logo',
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    hasNetworks
+                      ? Text('Your IRC Networks') // Replace with actual UI for networks
+                      : ElevatedButton(
+                        onPressed: () {
+                        // Handle "Add Network" button press
+                        },
+                        child: const Text('Add Network'),
+                   ),
+                 ],
+               ),
+             ),
+           ],
+         ),
+       ),
       ),
     );
-  }
-
-  ThemeData _getTheme(BuildContext context) {
-    if (kIsWeb) {
-      // Apply dark theme by default on web
-      return _darkTheme;
-    } else {
-      final brightness = MediaQuery.of(context).platformBrightness;
-      if (brightness == Brightness.dark) {
-        return _darkTheme;
-      } else {
-        return _lightTheme;
-      }
-    }
   }
 }

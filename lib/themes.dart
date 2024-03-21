@@ -1,35 +1,43 @@
 import 'package:flutter/material.dart';
 
-final ThemeData lightTheme = ThemeData(
+final ThemeData lightErgonaut = ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.white,
   colorScheme: ColorScheme.light(
     primary: Colors.white,
     secondary: Color(0xFF529F28),
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+        (Set<MaterialState> states) {
+          if (states.contains(MaterialState.hovered)) {
+            return Color(0xFF529F28).withOpacity(0.8);
+          }
+          return Color(0xFF529F28);
+        },
+      ),
+    ),
+  ),
 );
 
-final ThemeData darkTheme = ThemeData(
+final ThemeData darkErgonaut = ThemeData(
   brightness: Brightness.dark,
   primaryColor: Color(0xFF121212),
   colorScheme: ColorScheme.dark(
     primary: Color(0xFF121212),
     secondary: Color(0xFFA9E34C),
   ),
-);
-
-class CustomButtonStyle {
-  static ButtonStyle buttonStyle(BuildContext context) {
-    return ButtonStyle(
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
       backgroundColor: MaterialStateProperty.resolveWith<Color>(
         (Set<MaterialState> states) {
           if (states.contains(MaterialState.hovered)) {
-            // Brighten the accent color when hovered over
-            return Theme.of(context).colorScheme.secondary.withOpacity(0.8);
+            return Color(0xFFA9E34C).withOpacity(0.8); // Brighter color on hover
           }
-          return Theme.of(context).colorScheme.secondary;
+          return Color(0xFFA9E34C); // Normal color
         },
       ),
-    );
-  }
-}
+    ),
+  ),
+);
