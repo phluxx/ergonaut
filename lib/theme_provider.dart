@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
   final ThemeData lightTheme;
 
   ThemeProvider({required this.darkTheme, required this.lightTheme}) {
-    _themeData = lightTheme;
+    _themeData = darkTheme;
     _loadTheme();
   }
 
@@ -31,7 +31,7 @@ class ThemeProvider extends ChangeNotifier {
     _saveTheme();
     notifyListeners();
   }
- 
+
   void _loadTheme() async {
     _prefs = await SharedPreferences.getInstance();
     final isDark = _prefs.getBool('isDark') ?? false;
